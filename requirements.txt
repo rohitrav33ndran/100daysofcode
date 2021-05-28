@@ -1,0 +1,5 @@
+future==0.18.2
+six==1.12.0
+
+prettytable==2.1.0
+Menu==3.2.2
