@@ -1,15 +1,12 @@
 # import colorgram
 #
 # colors = colorgram.extract('hirstpainting.png',50)
-#
 # colorslist = []
-#
-#
+
 # for color in range(1,len(colors)):
 #     r,g,b = colors[color].rgb
 #     colorslist.append((r,g,b))
-#
-# print(colorslist)
+
 import turtle as t
 import random
 
@@ -35,15 +32,6 @@ for _ in range(10):
         turtle_1.up()
         turtle_1.forward((50))
 
-
-
-# def draw_spirograph(size_of_gap):
-#     for _ in range(int(360/size_of_gap)):
-#         turtle_1.color(random_color())
-#         turtle_1.circle(100)
-#         turtle_1.setheading(turtle_1.heading() + size_of_gap)
-#
-# draw_spirograph((5))
 
 myscreen = t.Screen()
 myscreen.exitonclick()
