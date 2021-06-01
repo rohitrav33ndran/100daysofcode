@@ -12,4 +12,3 @@
 # Write to the file
 with open("new_file.txt", mode="w") as file:
     file.write("What's happening")
-    
