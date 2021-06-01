@@ -10,5 +10,10 @@
 
 
 # Write to the file
-with open("new_file.txt", mode="w") as file:
-    file.write("What's happening")
+# with open("new_file.txt", mode="w") as file:
+#     file.write("What's happening")
+
+#Get path - absolute path
+import os
+abspath = os.path.abspath("new_file.txt")
+print(abspath)
