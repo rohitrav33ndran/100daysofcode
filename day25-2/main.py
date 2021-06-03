@@ -35,12 +35,12 @@ while len(guessed_state)< 50:
         t.write(fstring)
 
 #states_to_learn.csv
-to_learn_list = []
+to_learn_list = [state for state in states["state"].tolist() if state not in guessed_state]
 
-
-for state in states["state"].tolist():
-    if state not in guessed_state:
-        to_learn_list.append(state)
+#
+# for state in states["state"].tolist():
+#     if state not in guessed_state:
+#         to_learn_list.append(state)
 
 df = pandas.DataFrame(to_learn_list)
 df.to_csv("state_to_learn.csv")
