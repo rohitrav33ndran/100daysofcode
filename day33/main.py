@@ -10,8 +10,8 @@ import time
 #
 MY_LATITUDE = 52.509080
 MY_LONGITUDE = 13.298040
-USERNAME = "1rohitraveendran@gmail.com"
-PASSWORD = "rcABeRSEMygI"
+USERNAME = "useremail"
+PASSWORD = "pass"
 
 response = requests.get(url="http://api.open-notify.org/iss-now.json")
 response.raise_for_status()
