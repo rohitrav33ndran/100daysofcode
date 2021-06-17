@@ -3,7 +3,7 @@ import os
 from datetime import datetime
 
 NUTRITIONIX_API_URL = os.environ.get("NUTRITIONIX_API_URL")
-SHEETY_API_URL = os.environ.get("SHEETY_API_URL")
+SHEETY_WORKOUT_API_URL = os.environ.get("SHEETY_WORKOUT_API_URL")
 NUTRI_APP_ID = os.environ.get("NUTRI_APP_ID")
 NUTRI_APP_KEY = os.environ.get("NUTRI_APP_KEY")
 SHEETY_RAND_TOKEN = os.environ.get("SHEETY_RAND_TOKEN")
@@ -38,7 +38,7 @@ def track_exercise():
 
 
 def get_sheets():
-    response = requests.get(url=SHEETY_API_URL,headers=SHEETY_HEADER)
+    response = requests.get(url=SHEETY_WORKOUT_API_URL,headers=SHEETY_HEADER)
     return response.json()
 
 
@@ -52,7 +52,7 @@ def add_row_sheets(date,time,exercise_name, exercise_duration,exercise_calories)
             "calories": exercise_calories,
         }
     }
-    response = requests.post(url=SHEETY_API_URL,json=workouts, headers=SHEETY_HEADER)
+    response = requests.post(url=SHEETY_WORKOUT_API_URL,json=workouts, headers=SHEETY_HEADER)
     print(response.text)
 
 
