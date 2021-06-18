@@ -35,10 +35,10 @@ class FlightSearch:
         response = requests.get(url=self.flight_location_search_url,params=self.locations_search_params, headers=self.LOCATION_SEARCH_HEADER)
         return response.json()['locations'][0]['city']
 
-    def search_cheap_flights(self):
+    def search_cheap_flights(self,from_city,to_city):
         search_params = {
-            "fly_from": "BER",
-            "fly_to": "PRG",
+            "fly_from": from_city,
+            "fly_to": to_city,
             "date_from": tomorrow.strftime("%d/%m/%Y"),
             "date_to": six_month_from_today.strftime("%d/%m/%Y"),
             "nights_in_dst_from": 7,
@@ -49,12 +49,18 @@ class FlightSearch:
             "curr": "GBP"
         }
         response = requests.get(url=self.cheap_flight_search_url,params=search_params,headers=SEARCH_HEADER)
-        # print(response.json())
-
         try:
-            res_data = response.status_code
+            res_data = response.json()['data'][0]
         except IndexError:
-            print(f"No flights found for .")
+            print(f"No flights found for {to_city}.")
             return None
-        print(res_data)
-        return res_data
+        departure_date = res_data['local_departure'].split('T')[0]
+        arrival_date = res_data['local_arrival'].split('T')[0]
+        flight_data = FlightData(
+            price=res_data['price'],
+            from_city = res_data['flyFrom'],
+            to_city = res_data['flyTo'],
+            from_date = departure_date,
+            to_date = arrival_date
+        )
+        return flight_data

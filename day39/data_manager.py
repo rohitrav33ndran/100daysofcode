@@ -15,11 +15,12 @@ class DataManager:
         self.SHEETY_FLIGHT_DEALS_API_URL = SHEETY_FLIGHT_DEALS_API_URL
         self.SHEETY_RAND_TOKEN = SHEETY_RAND_TOKEN
         self.SHEETY_HEADER = SHEETY_HEADER
-        self.prices_sheet = self.get_sheets()
 
-    def get_sheets(self):
-        response = requests.get(url=self.SHEETY_FLIGHT_DEALS_API_URL, headers=self.SHEETY_HEADER)
-        print(response.json())
+
+    def get_sheets(self,sheet_name):
+        sheets_url = f"{self.SHEETY_FLIGHT_DEALS_API_URL}/{sheet_name}"
+        print(sheets_url)
+        response = requests.get(url=sheets_url, headers=self.SHEETY_HEADER)
         return response.json()
 
     def update_row_sheets(self,code,id):
@@ -30,4 +31,16 @@ class DataManager:
         }
         update_url = f"{self.SHEETY_FLIGHT_DEALS_API_URL}/{id}"
         response = requests.put(url=update_url, json=prices, headers=SHEETY_HEADER)
-        print(response.text)
+        return response.status_code
+
+    def add_row_sheets(self,first_name,last_name,email):
+        users = {
+            "user": {
+                "firstName": first_name,
+                "lastName": last_name,
+                "email": email,
+            }
+        }
+        sheet_url = f"{SHEETY_FLIGHT_DEALS_API_URL}/users"
+        response = requests.post(url=sheet_url,json=users,headers=SHEETY_HEADER)
+        return response.status_code
