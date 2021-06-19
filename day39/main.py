@@ -2,17 +2,26 @@
 
 from data_manager import DataManager
 from flight_search import FlightSearch
-from flight_data import FlightData
+from notification_manager import NotificationManager
+from datetime import datetime, timedelta
 
 
-iata_code = []
+
+ORIGIN_IATA_CODE = "BER"
+
+
 
 data_manager = DataManager()
 flight_search = FlightSearch()
-prices_sheet = data_manager.get_sheets("prices")
-# for item in data_manager.prices_sheet['prices']:
-#     locations = flight_search.get_locations(item['city'])
-#     data_manager.update_row_sheets(locations['code'],item['id'])
+notification_manager = NotificationManager()
+sheet_data = data_manager.get_sheets("prices")
+tomorrow = datetime.now() + timedelta(days=1)
+six_month_from_today = datetime.now() + timedelta(days=6 * 30)
+if sheet_data[0]['iataCode'] == "":
+    location_data = [(row['code'],row['id']) for row in sheet_data]
+    # for item in data_manager.prices_sheet['prices']:
+    #     locations = flight_search.get_locations(item['city'])
+    data_manager.update_row_sheets(location_data)
 
 # print("Welcome to Rohit's Flight club")
 # print("We find the best flight deals and email you")
@@ -28,12 +37,15 @@ prices_sheet = data_manager.get_sheets("prices")
 # users_sheet = data_manager.get_sheets("users")
 # print(users_sheet)
 
-prices_sheet = data_manager.get_sheets("prices")
-for each_city in prices_sheet['prices']:
-    print(each_city)
-    search_data = flight_search.search_cheap_flights("BER",each_city['iataCode'])
+# prices_sheet = data_manager.get_sheets("prices")
+for each_city in sheet_data['prices']:
+    # print(each_city)
+    search_data = flight_search.search_cheap_flights(ORIGIN_IATA_CODE,each_city['iataCode'],tomorrow,six_month_from_today)
     if search_data is not None:
         if search_data.price < each_city['lowestPrice']:
-            print(f"{search_data.from_city} to {search_data.to_city} on date {search_data.from_date} has lowest price GBP {search_data.price}")
+            message = f"{search_data.from_city} to {search_data.to_city} on date {search_data.from_date} has lowest price GBP {search_data.price}"
+            if search_data.via_city > 0:
+                message = f"\nThe flight has {search_data.stop_over} stop over via city {search_data.via_city}"
+            notification_manager.send_email(message)
     else:
         continue

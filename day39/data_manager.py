@@ -19,11 +19,12 @@ class DataManager:
 
     def get_sheets(self,sheet_name):
         sheets_url = f"{self.SHEETY_FLIGHT_DEALS_API_URL}/{sheet_name}"
-        print(sheets_url)
+        # print(sheets_url)
         response = requests.get(url=sheets_url, headers=self.SHEETY_HEADER)
         return response.json()
 
-    def update_row_sheets(self,code,id):
+    def update_row_sheets(self,location_data):
+        code,id = location_data
         prices = {
             "price": {
                 "iataCode": code,

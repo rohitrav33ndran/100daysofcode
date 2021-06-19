@@ -35,12 +35,12 @@ class FlightSearch:
         response = requests.get(url=self.flight_location_search_url,params=self.locations_search_params, headers=self.LOCATION_SEARCH_HEADER)
         return response.json()['locations'][0]['city']
 
-    def search_cheap_flights(self,from_city,to_city):
+    def search_cheap_flights(self,from_city,to_city,tomorrow,six_months_from_today):
         search_params = {
             "fly_from": from_city,
             "fly_to": to_city,
             "date_from": tomorrow.strftime("%d/%m/%Y"),
-            "date_to": six_month_from_today.strftime("%d/%m/%Y"),
+            "date_to": six_months_from_today.strftime("%d/%m/%Y"),
             "nights_in_dst_from": 7,
             "nights_in_dst_to": 28,
             "flight_type": "round",
@@ -51,16 +51,37 @@ class FlightSearch:
         response = requests.get(url=self.cheap_flight_search_url,params=search_params,headers=SEARCH_HEADER)
         try:
             res_data = response.json()['data'][0]
+            print(res_data)
         except IndexError:
             print(f"No flights found for {to_city}.")
-            return None
-        departure_date = res_data['local_departure'].split('T')[0]
-        arrival_date = res_data['local_arrival'].split('T')[0]
-        flight_data = FlightData(
-            price=res_data['price'],
-            from_city = res_data['flyFrom'],
-            to_city = res_data['flyTo'],
-            from_date = departure_date,
-            to_date = arrival_date
-        )
-        return flight_data
+            search_params['max_stopovers'] = 1
+            response = requests.get(url=self.cheap_flight_search_url,params=search_params,headers=SEARCH_HEADER)
+            res_data = response.json()['data'][0]
+            print(res_data)
+            flight_data = FlightData(
+                price=res_data['price'],
+                from_city=res_data['route'][0]['cityFrom'],
+                from_airport=res_data['route'][0]['flyFrom'],
+                to_city=res_data['route'][1]['cityTo'],
+                to_airport=res_data['route'][1]['flyTo'],
+                departure_date=res_data['route'][0]['local_departure'].split('T')[0],
+                return_date=res_data['route'][2]['local_departure'].split('T')[0],
+                stop_overs=1,
+                via_city=res_data["route"][0]["cityTo"]
+            )
+            return flight_data
+
+        else:
+            departure_date = res_data['local_departure'].split('T')[0]
+            arrival_date = res_data['local_arrival'].split('T')[0]
+            flight_data = FlightData(
+                price=res_data['price'],
+                from_city=res_data['route'][0]['cityFrom'],
+                from_airport=res_data['route'][0]['flyFrom'],
+                to_city=res_data['route'][0]['cityTo'],
+                to_airport=res_data['route'][0]['flyTo'],
+                departure_date=res_data['route'][0]['local_departure'].split('T')[0],
+                return_date=res_data['route'][1]['local_departure'].split('T')[0]
+
+            )
+            return flight_data
