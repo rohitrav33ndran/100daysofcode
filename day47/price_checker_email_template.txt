@@ -1,0 +1,7 @@
+Hi,
+
+Amazon has dropped the price of the [PRODUCT_NAME] from original price [ORIGINAL_PRICE] to [DISCOUNTED_PRICE]
+
+Amazon Link to the product [PRODUCT_URL]
+
+Rohit
