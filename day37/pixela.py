@@ -1,10 +1,11 @@
 import requests
 from datetime import datetime
+import os
 
 
-USERNAME = "redskull"
-TOKEN = "kjSdwBgAjazcy7MTBq9kaxtAU2u"
-pixela_endpoint = "https://pixe.la/v1"
+USERNAME=os.environ.get("PIXELA_USERNAME")
+TOKEN=os.environ.get("PIXELA_TOKEN")
+pixela_endpoint=os.environ.get("PIXELA_ENDPOINT")
 
 headers = {
     "X-USER-TOKEN": TOKEN
