@@ -9,6 +9,9 @@ driver = webdriver.Chrome(executable_path=chrome_driver_path)
 addresses = []
 prices = []
 urls = []
+success_list = []
+fail_list = []
+
 
 def scrape_data_from_daft():
     driver.get("https://www.daft.ie/property-for-sale/ireland?showMap=false")
@@ -34,21 +37,55 @@ def scrape_data_from_daft():
         prices.append(price)
         urls.append(url)
 
+    return addresses, prices, urls
+
 
 def fill_form_with_scrapped_data():
     driver.get("https://docs.google.com/forms/d/e/1FAIpQLScM1MrEiKQa5b3VLir9olF34SlkgK2_zSah2I5B_HXmCBAEPg/viewform?usp=sf_link")
-
-    inputs = driver.find_elements(By.CLASS_NAME,"whsOnd zHQkBf")
+    inputs = driver.find_elements(By.TAG_NAME,"input")
+    address_input = inputs[0]
+    price_input = inputs[1]
+    url_input = inputs[2]
+    # print(inputs)
     # for n in range(len(inputs)):
     #     input = input[n].find_element(By.TAG_NAME,"input")
     #     input.send_keys(addresses[n])
     # price_input = driver.find_element(By.CLASS_NAME,"//input[@aria-label='Price']")
     # url_input = driver.find_element(By.CLASS_NAME,"//input[@aria-label='Property URL']")
 
+    return address_input, price_input, url_input
 
+
+def fill_and_submit_form():
+    addresses, prices, urls = scrape_data_from_daft()
+    address_input, price_input, url_input = fill_form_with_scrapped_data()
+
+    for n in range(3):
+        print(addresses[n])
+        # try:
+        #     address_input.send_keys(addresses[n])
+        #     price_input.send_keys(prices[n])
+        #     url_input.send_keys(urls[n])
+        #
+        #     submit_button = driver.find_element(By.XPATH,"/html/body/div/div[2]/form/div[2]/div/div[3]/div[1]/div[1]/div/span/span")
+        #     submit_button.click()
+        #
+        #     clear_button = driver.find_element(By.XPATH, '/html/body/div[1]/div[2]/div[1]/div/div[4]/a')
+        #     clear_button.click()
+        # except:
+        #     fail_list.append(n)
+        # finally:
+        #     clear_button = driver.find_element(By.XPATH, '/html/body/div[1]/div[2]/div[1]/div/div[4]/a')
+        #     clear_button.click()
+
+
+fill_and_submit_form()
+# scrape_data_from_daft()
+sleep(1)
 driver.quit()
 
 # Print the addresses and prices
-print(addresses)
-print(prices)
-print(urls)
+# print(addresses)
+# print(prices)
+# print(urls)
+
